@@ -1,209 +1,251 @@
-# Table of Contents
-
-- [NETWORKING](#networking)
-- [OPERATING SYSTEM](#operating-system)
-- [DATABASE](#database)
-- [SECURITY](#security)
-
-## NETWORKING
-
-1. Read the concept of TCP in [this wiki page](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) and try to understand all the concepts of it (deeply):
-    - How TCP open a connection? what does it need to open a connection?
-        + Why there are 3 way handshakes but not 2 way? 
-        + What is syn, ack mean?
-        + Why they have to send 2 "random" sequence numbers? The purpose of this sequence number?
-        + What if the 3rd handshake fail? How the server can detect it and what does it do in this case?
-    - How TCP handles the connection?
-        + What happens if some bits are wrong due to connection errors? How to detect them and fix them?
-        + How the timeout is handled? what if the timeout is expired?
-        + What will happen if some "packet" is missing on the way?
-        + How to detect the appropriate number of packets to send (speed of sending packet)?
-    - How TCP close the connection?
-        + What if the internet is dropped in the middle of the connection? Or in case one peer is crash?
-    - How long you can keep a TCP connection alive?
-
-2. What are the differences between TCP and UDP? And in which case we use which?
-
-3. How Ping command works? What is TTL?? How does TTL will be changed?? 
-
-4. How HTTP works?
-    - Why did people say that HTTP is stateless? The reason they make it stateless?
-    - Can we make a persistent HTTP connection? pros and cons of this way?
-    - Why HTTP require cookie each time we send the request?
-    - Can someone use your cookie and log in your Facebook account? How to migrate this?
-    - What is HTTP session? How does authentication work in HTTP? What is JWT?
-    - Which type of "data" HTTP can help us to get or push? (binary file? image? text file? video file? music file?)
-    - REST/RESTful?
-    - AJAX technique? 
-    - How HTTPs work?
-    - Learn about some useful headers.
-
-5. When you type "google.com" into your browser, that will happen when you type enter till everything is displayed on your screen?
-    - DNS lookup (in case you already access google.com before and also in case you do not know the IP of google.com)
-        + Which protocol DNS use and why?
-        + The other of place to look up DNS.
-    - TCP or UDP will be used in this case? why?
-    - How to know "google.com" require HTTP or https? how browser can know and redirect from HTTP to HTTps?
-    - After you get the `HTML content` for "google.com" how to get the `*.js` and `image` files?
-    - When getting `*.js` or `image` files do why use another `TCP connection` or use the same one as in the get `HTML content`? How DNS lookup work in this case?
-    - After your browser display "google.com" fully, is there any connection open?
-    - Caching can apply to which steps? How caching applied?
-
-6. What is the connection pool? It's advantages and disadvantages? How to implement connection pool in your programing language?
-
-7. What is socket?
-    - Why do we need socket? Why socket is a "file" in linux?
-    - What is `src port` when you create a connection to a "server"?
-    - What one server can handle multiple connections to the same port? [Good answers here but read all answers](https://stackoverflow.com/questions/3329641/how-do-multiple-clients-connect-simultaneously-to-one-port-say-80-on-a-server)
-    - What is the maximum number of connections a server can handle? (if it has unlimited resource) (in case of the same client and in case of multiple clients)
-    - When you open multiple tabs on your chrome, how OS knows which packet (both sending and receiving) correspond to which tab? (how about in case you open many tabs to the same page "for eg: google.com")
-    - What are the maximum numbers of connection your machine can connect to "google.com" (if you have unlimited resource)
-    - Can two processes listen to the same port on your machine? Why? How?
-    - What is `buffer`? why we always need buffer when working with "file"?
-    - What is `unix socket`? When to use it?
-
-8. What is `TCP proxy`? `reverse proxy`? and `VPN`?
-    - How your router at your home works?
-        + Inside LAN network, it uses IP or MAC address? Why?
-        + How does it know which packet comes from (or arrive at) which machine?
-        + What is the difference between Hub and Switch inside LAN?
-        + How src IP/PORT and dst IP/PORT change on the way to the server?
-    - How `load-balancer` works? (this one is a tough question) // hint: it opposite to how to router work. 
-        + When we send a packet to a `load-balancer` how does it forward to the desired server? (Does it keep any data on its memory?)
-        + When the server wants to send data back to the client, does the connection need to go through the `load-balancer`? 
-        + What is different between `reverse proxy` and `load-balancer`?
-        + Can `load-balancer` be a bottleneck? (Because it is the end-point of too many requests) (bottleneck about RAM or CPU or Network?)
-        + Try to understand everything in [this page](https://softwareengineering.stackexchange.com/questions/312956/what-does-a-load-balancer-return) (all the answers)
-
 ## OPERATING SYSTEM
+1.	What is process, thread? What are the differences between them?
 
-1. What is `process`, `thread`? What are the differents between them?
-    - What data `process`, `thread` need to live? Why they said that `Thread is a lightweight process`?
-    - How CPU switch (context switch) between `processes`/threads`? How data is to ensure safety? (in case single CPU core and multiple CPU cores)
-    - What is `multi-process` and `multi-thread`? When we should you which one?
-        + Process has how many states? How does it change between each state?
-        + Scheduling algorithm.
-        + What will happen if a process is `waiting`? Or a thread is `sleeping`?
-        + How CPU detects that a thread is `sleeping`? Or detect when it wants to run?
-    - What is `thread-pool`? How to use it? Describe how to create a `thread-pool` in your programming language
-    - Can 2 different processes access or change data of each other `address space`? (this question may make you confuse with your knowledge about `virtual memory`)
-        + Can 2 processes use the same library (for eg: libc is required to every process)? How?
-        + How does `debugger` work? How it can attach to a running process and change data of that process? (so cool, right?)
-    - How 2 processes can communicate with each other? (There are a lot of ways but focus on the OS's way)
-    - What is `child-process`? How to create a `child-process`?
-        + What data a `child-process` have when we create it?
-        + Can it read/write data on it's `parent process`?
-        + What is `copy on write (COW)`? **(this concept is important to understand OS)** // if you love computer security like me you can read more about `Dirty COW`, it's fabulous
-        + What will happen when `child-process` changes a variable of `parent process`?
-        + If `file descriptor` also be `inherited` by the `child process`. What if 2 processes can handle a same `file descriptor` or even a same `socket`? can refer [here](https://www.cs.ait.ac.th/~on/O/oreilly/perl/cookbook/ch17_10.htm)
+a.	What data process, thread need to live? Why they said that Thread is a lightweight process?
 
-2. `Concurrency` vs `Parallels`? (in case single CPU core and multiple CPU cores)
-    - What is `critical zone`? 
-    - What is `race condition` and how to handle this case?
-    - What is locking mechanism? `mutex`? `semaphore`? `spinlock`? `read lock` vs `write lock`?
-    - What is `deadlock` and how to avoid `deadlock`?
+•	A process is a program in execution. Each process is executed in separated space, and one process can’t access other process’s data. If a process wants to access other process data and resource, an inter-connection between process must be established.
 
-3. How does memory is managed in the OS?
-    - What is `virtual memory`? Why do we need it? How does it work?
-        + How large `virtual memory` is?
-        + What is `paging`?
-        + Can 2 processes map to the same `physical address`? How and in which case?
-    - What is `heap space` and `stack space`?
-    - What will happen with memory when you open an application?
-    - What will happen you call another function (with parameters) or return from a function? 
-        + What will happen with stack? (why we do not use heap here?)? 
-        + What will happen with registors?
-    - What causes stack-over-flow?
-    - What is dynamic allocating? How does it work? 
-        + How does deallocation work?
-        + What happens when your computer is full of memory?
-    - Why you do not need to "deallocate" local variable?
-    - How does `Garbage Collection` work? When it will be triggered?
-    - What is a pointer? What difference between `pass by value` and `pass by reference`?
-    - Where `global variable` will be saved?
+•	A thread exists within the process and shares the process resources (including heap space). Each thread still has its own stack and registers. If a thread modifies data in the heap, other threads will see the update.
 
-4. Why in Linux `everything is "file"`?
-    - How does mouse/keyboard/monitor..... communicate with your computer?
-    - What is `file descriptor`?
-    - What is `buffer`? Why do we need `buffer`?
-    - What will happen if 2 processes read/write to the same file?
+b.	What is multi-process and multi-thread? When we should you which one?
 
-5. What is `system call (syscal)`?
-    - How to do a `syscal`?
-    - What happens with CPU when we execute a `syscal`?
-    - What is `user space` and `kernel space`?
+•	Multiprocessing is when the system has two or more processes executed at the same time by using multiple processors (CPU). 
 
-6. Caching:
-    - What is in-memory cache? (memcached/redis)
-    - LRU? implement LRU in your program language! (How about multi-thread?)
-    - How to migrate `Cache stampede`?
-    - Quicksort(O(n^2) in worst case) vs Merge sort (O(nlogn) in worst case). Which is faster? Why? How they use these 2 sorting algorithms in real life?
+•	Multi-thread is one process has multiple code segments (thread).
 
-- Good resources:
-    * [Overview of OS syntax, try do dive deeper to each concept](https://medium.com/cracking-the-data-science-interview/the-10-operating-system-concepts-software-developers-need-to-remember-480d0734d710)
+•	It depends on our system to decide which we should use. In most cases, if we have multiple processors, we should use multiprocessing and multithread at the same time.
+
+i.	Process has how many states? How does it change between each state?
+
+Process has 7 states: new, ready, running, waiting, terminated, suspend ready and suspend wait. 
+
++ New: the process is about to create but not yet created. It’s the program inside hard disk ready to be picked by OS.
+
++ Ready: the process is inside RAM and wait to be scheduled by OS to execute.
+
++ Running: The CPU is executing the process.
+
++ Waiting: the process requests an I/O or needs input from user or needs access to critical region (where it’s been locked).
+
++ Terminated: The CPU finishes executing.
+
++ Suspend ready: Process that was initially in the ready state but were swapped out of main memory and placed onto external storage by scheduler.
+
++ Suspend wait: Like suspend ready but uses the process which was performing I/O operation and lack of main memory caused them to move to secondary memory.
+
+ii. Scheduling algorithm (Round robin, …) 
+
+iii. What will happen if a process is waiting? Or a thread is sleeping?
+     + Waiting: the process will release all the resources hold by the process and waits for other process to be executed.
+    +  Sleep: the process will keep the lock on all the resources till the sleep time is over and again starts the execution of process.
+
+iv. How CPU detects that a thread is sleeping? Or detect when it wants to run?
+
+The scheduler will maintain a table saying that the process is waiting or sleeping.
+
+c.	What is thread-pool? How to use it? Describe how to create a thread pool in Java.
+
+Thread pool is used to limit the number of threads can be run at a given time. Instead of creating thread for each task, at a given time, a task will be taken to thread pool and assigned to a “free” thread.
+
+d.	Can 2 different processes access or change data of each other address space? 
+
+No, if no communication method (shared memory or message parsing). 
+
+i.	Can 2 processes use the same library (for eg: libc is required to every process)? How?
+
+Yes, we can take the library as the common resource between 2 processes.
+
+ii.	How does debugger work? How can it attach to a running process and change data of that process?
+
+e.	How can two processes communicate with each other?
+
+Shared memory and message parsing.
+
++ Shared memory: some memory will be shared between processes (any process can access it)
+ 
++ Message parsing: establishes communication link and then exchange the messages.
+
+f.	What is child-process? How to create a child-process?
+
+A child process is a process created by a parent process in operating system using a fork() system call.
+
+i.	What data a child-process have when we create it?
+
+A child process will have the same data as parent process.
+
+ii.	Can it read/write data on its parent process?
+
+No, after using the fork() system call, two processes are independent.
+
+iii.	What is copy on write (COW)?
+
+When a parent process creates a child process, both will initially share the same memory space. If any processes try to modify the data, a copy of page will be created, and 
+the modification will happen in the copied version.
+
+iv.	What will happen when child-process changes a variable of parent process?
+
+After creating, the child process and the parent process are independent, so it will not affect the variable of parent process.
+
+v.	If file descriptor also be inherited by the child process. What if 2 processes can handle a same file descriptor or even a same socket?
+
+2.	Concurrency and Parallels? 
+
+Concurrency relates to processing multiple tasks at the same time, by using the context switch. Parallel means dividing task to multiple sub-tasks, and then each processor will run each sub-task (couldn’t happen if we only have one processor).
+
+a.	What is critical zone?
+Shared memory contains shared variables or resources which are needed to be synchronized to maintain consistency of data variable. Critical section contains shared variables or resources which are needed to be synchronized to maintain variable consistency.
+
+b.	What is race condition and how to handle this case?
+Race condition happens when multiple threads/processes try to access and change the variables in the shared memory. To handle this case, we need to use process synchronization.
+
+c.	What is locking mechanism? Mutex? Semaphore? Spinlock? Read lock vs write lock?
+
+d.	What is deadlock and how to avoid deadlock?
+
+Deadlock is the situation where a set of processes are being blocked because each process is holding a resource and waiting for another resource acquired by some other processes. 
+
+3.	How does memory is managed in OS?
+
+a.	What is virtual memory? Why do we need it? How does it work?	
+
+-	When executing a process, we maintain only some pages of processes, such memory is called virtual memory and part of processes inside RAM is called virtual address space.
+
+-	We need virtual for 2 reasons:
+
++ Increase the degree of multiprogramming.
+
++ Even if the size of process is larger than RAM, we can still execute the process.
+
+•	How large is virtual memory?
+
+The size of virtual storage is limited by the addressing scheme of the computer system and the amount of secondary memory (hard disk) is available
+
+•	What is paging?
+
+Is the process of dividing the process into parts, usually with the same size as frame of RAM.
+
+•	Can two processes have the same physical address? How and in which cases?
+
+Two processes can use the same shared memory. To save physical memory space, programs using the same read-only code libraries will be using a shared single copy of the library.
+
+b.	What is heap space and stack space?
+
+•	Stack space: 
+
++ The size of memory to be allocated is known to the compiler and whenever a function is called, its variables get memory allocated on the stack.
+
++ After execution, the variables inside the stack will be deleted.
+
++ Has less storage space compared to heap.
+
+•	Heap space:
+
++ The memory is allocated during the execution of instructions written by programmers.
+
++ When creating an object, the actual object is stored in heap, while the pointer is in stack.
+
++ We must delete the object after using by ourselves (to avoid the problem about memory leak).
+
+c.	What will happen with memory when you open an application?
+
+OS will first check the amount of memory available, and then move a copy of application (or some pages of application if we don’t have enough space) to RAM. CPU will execute the process.
+
+d.	What will happen when you call another function with parameters or return from a function?
+
+•	What will happen with stack? Why don’t we use heap here?
+
+-	When we call a function, a new stack frame is created with all the function’s data and this frame is pushed into stack. Then: 
+
++ Sub-routine instructions are executed.
+
++ Stack frame is popped from the stack.
+
++ Now, the program counter is holding the return address.
+
+-	We don’t use heap as we need to store the functions execution sequentially.
+
+•	What will happened with registers?
+
+e.	What causes stack overflow?
+
+A stack overflow is when you use all the memory for the stack than your program was supposed to be (usually because of infinite recursion).
+
+f.	What is dynamic allocating? How does it work?
+
+Dynamic allocating is the process of assigning memory to process during its run time. It can be done both in stack and heap:
+
+-	Stack: a typical example is stack when we do recursion
+
+-	Heap: new operator. 
+
+g.	Why don’t you need to "deallocate" local variable?
+
+As local variables are stored inside the stack, the compiler will automatically deallocate them.
+
+h.	How does Garbage Collection work? When it will be triggered?
+
+(https://www.dynatrace.com/resources/ebooks/javabook/how-garbage-collection-works/)
+
+•	To determine which objects are no longer in use, the JVM intermittently runs what is very aptly called a mark-and-sweep algorithm:
+
++ The algorithm traverses all object references, starting with the GC roots, and marks every object found as alive.
+
++ All the heap memory that is not occupied by marked objects is reclaimed. It is simply marked as free, essentially swept free of unused objects.
+
+•	When a JVM runs out of space in the storage heap and is unable to allocate any more objects (an allocation failure), a garbage collection is triggered.
+
+i.	What is a pointer? What difference between pass by value and pass by reference?
+
+•	Pass by value: A copy of variable is passed to the parameter of function.
+
+•	Pass by reference: The memory address of variable is passed to function.
+
+j.	Where global variable will be saved?
+
+Global and static variable will be stored in data segment.
+
+4.	Why in Linux “Everything is file”?
+
+5.	What is system call (sys call)?
+
+In computing, a system call is the programmatic way in which a computer program requests a service from the kernel of the operating system it is executed on. A system call is a way for programs to interact with the operating system.
+
+Kernel is the most important part of OS (the part that is frequently executed by CPU).
+Processes can be executed in two modes: user mode and kernel mode. In kernel mode, the process can access any hardware devices and PCB. 
+
+a.	How to do a system call?
+
+When need, we can write code (create, open, …) so the program will know to call to OS to do the system call.
+
+b.	What happens with CPU when we execute a syscall?
+
+The register of CPU will change the bit mode. 
+
+c.	What is user space and kernel space?
+
+Memory is divided into two distinct areas:
+
+•	The user space, which is a set of locations where normal user processes run (everything other than the kernel). The role of the kernel is to manage applications running in this space from messing with each other, and the machine.
+
+•	The kernel space is where the code of the kernel is stored and executes under.
+
+6.	Caching:
+
+a.	What is in-memory cache? (memcached/redis)
+
+b.	LRU? implement LRU in your program language! (How about multi-thread?)
+
+(https://leetcode.com/problems/lru-cache/discuss/?currentPage=1&orderBy=hot&query=)
+
+c.	How to migrate Cache stampede? 
+
+d.	Quicksort(O(n^2) in worst case) vs Merge sort (O(nlogn) in worst case). Which is faster? Why? How they use these 2 sorting algorithms in real life?
+-	https://www.geeksforgeeks.org/quick-sort-vs-merge-sort/
 
 
-## DATABASE
-
-1. Compare `Relational DB (SQL)` vs `NoSQL`. It's also really nice to know about `newSQL` (a kind of auto sharding DB which support `SQL stuff` but scale like `NoSQL`) 
-    - How these 2 things can scale up?
-    - How Transaction is handled? 
-    - `ACID` of `SQL` and `BASE` of `NoSQL`? Why `NoSQL` is `eventual consistency`?
-    - `CAP` theorem in this case. [This is a so nice graph](http://blog.nahurst.com/visual-guide-to-nosql-systems)
-
-2. What is `parameterized statement` (in Java it's `prepared statement`)? How does it work **internally**?
-    - What is `SQL injection`? how to avoid it?
-    - How many "requests" you have to send to `Database` in a single `prepared statement` query? // one for compile and one for execute
-    - Can you reuse the `compiled` query multiple times? (does it help to speed up your application?)
-
-3. How `indexing` works internally?
-    - What algorithm and data structure `indexing` used? And why?
-    - How `composite indexing` works?
-    - How to know your query is using index?
-    - How index work in this case: `WHERE age = 5` and `Where age > 5`? The complexity to go to the next record?
-    - Indexing with char?
-
-4. The complexity of SQL query? How to measure it? How SQL optimize a query?
-    - Compare `WHERE id = 'a' AND id = 'b' AND id = 'c'` vs `WHERE id in (a, b, c)`?
-    - Complexity of this query `SELECT * FROM abc ORDER BY name LIMIT 10 OFFSET 1000000` // SELECT 10 record from offset 10^6 after sort by name (which is a char)? How to optimize it?
-    - What is the complexity of `COUNT(*)` query?
-    - How to write query to avoid full table scan?
-    - Complexity of `JOIN`, `INNER JOIN`, `OUTTER JOIN`?
-
-5. What is Database Replicating? When we need it?
-    - What is `bin log`? How `Master DB` sync with `Slave DB`?
-    - Can a `Slave DB` be a slave of another `Slave DB` (we do not need to sync from `Master DB` directly)?
-
-6. What is Database Sharding? When we need it?
-    - Which rule we can apply to DB Sharding?
-    - How to ensure `primary key` is globally unique when sharding?
-    - How we can shard a table to multiple tables (same server) and multiple DB (multiple servers)?
-    - How query can work when we sharding? for example query but the data is in different tables/dbs?
-
-7. What is database transaction?
-    - How `rollback` works internally?
-    - `ACID`? What is `dirty read`?
-    - How transaction work when there are many concurrent requests?
-    - How to avoid `race condition` in DB? `Read/Write` lock?
-    - `Distributed transaction`? How to make a transaction when a query needs to access multiple DB?
 
 
-## SECURITY
+7. Recommend resource: Personally, I don't study computer science at college. So this sequence on Udemy would be a good resource to study operating system for anyone who comes from different background like me: https://www.udemy.com/course/operating-systems-from-scratch-part1/ . My advice would be study all 4 parts to get the foundation for operating system, and then try to answer the questions here. 
 
-1. Hash vs Encrypt vs Encode
-    - Are there any way we can crack `Hash`
-    - symmetric vs asymmetric encryption? AES vs RSA?
-    - Fast Hash vs Slow Hash?
-    - When we use Encode??
-    - What is the perfect hash function?
-    - What is the load factor of hashing?
 
-2. SSL/TLS
-    - How to verify a certificate? How many kinds of certificates are there?
-    - What is CA? how to verify certificate of a CA?
-    - What is `public`/`private` key? what is symmetric `key`
-    - What is digital signature? What is `HMAC`?
 
-3. How to store credential information efficiency? (user password, config key, database credential, user information, secret key,.... )
-
-4. Describe a way to defense DDOS? (actually, there are many kinds of DDOS not just network or memory, so this question is pretty complicated)
